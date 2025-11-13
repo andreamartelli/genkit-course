@@ -15,7 +15,7 @@
  */
 
 import { ai } from '../genkit.js';
-import { InputQuestionSchema, MammaAdviceSchema } from '../schemas.js';
+import { InputQuestionSchema } from '../schemas.js';
 
 // Load prompt
 const advicePrompt = ai.prompt('mammaAdvice');
@@ -24,11 +24,9 @@ export const getMammaAdvice = ai.defineFlow(
   {
     name: 'getMammaAdvice',
     inputSchema: InputQuestionSchema,
-    outputSchema: MammaAdviceSchema,
   },
   async (input) => {
     const response = await advicePrompt(input);
-    // The response.output() will automatically parse the JSON if the model followed instructions
     return response.output;
   }
 );
