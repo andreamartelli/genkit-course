@@ -14,5 +14,24 @@
  * limitations under the License.
  */
 
-import './src/genkit.js';
-import './src/flows/mamma.js';
+import { ai } from '../genkit.js';
+import * as z from 'zod';
+
+// Load prompt
+const advicePrompt = ai.prompt('mammaAdvice');
+
+export const getMammaAdvice = ai.defineFlow(
+  {
+    name: 'getMammaAdvice',
+    inputSchema: z.object({
+      question: z.string().describe("The user's financial question or topic"),
+    }),
+    outputSchema: z.string().describe("Mamma's financial advice"),
+  },
+  async (input) => {
+
+    const response = await advicePrompt(input);
+
+    return response.text;
+  }
+);

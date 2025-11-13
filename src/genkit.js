@@ -14,5 +14,22 @@
  * limitations under the License.
  */
 
-import './src/genkit.js';
-import './src/flows/mamma.js';
+import { genkit } from 'genkit';
+import { vertexAI } from '@genkit-ai/vertexai';
+
+export const ai = genkit({
+  plugins: [
+    vertexAI({
+      projectId: 'mamma-ai-fsi',
+      location: 'us-central1', // You can change this to 'europe-west1' if preferred
+    }),
+  ],
+  model: vertexAI.model('gemini-2.5-flash', {
+    temperature: 1,
+  }),
+  promptDir: './prompts',
+  // Placeholder for flow state and observability, will be discussed later
+  flowStateStore: 'firebase', 
+  logLevel: 'debug',
+  enableTracingAndMetrics: true,
+});

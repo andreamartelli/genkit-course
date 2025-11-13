@@ -1,0 +1,103 @@
+# Genkit Course: "ConsigliAI di Mamma" - Masterplan
+
+This document outlines the full plan for the interactive Genkit course.
+
+## The Use Case: "ConsigliAI di Mamma"
+
+A GenAI-powered financial advisor with the persona of a caring, wise, and slightly stereotypical Italian mother.
+
+## High-Level Course Structure
+
+1.  **Module 1: "Parliamo di Genkit"** (Introduction)
+2.  **Module 2: "Il Primo Consiglio di Mamma"** (The First Step)
+3.  **Module 3: "Mamma Vuole Chiarezza"** (Structuring the Conversation & Prompts)
+4.  **Module 4: "Mamma si Informa"** (Making Mamma Smart with Tools)
+5.  **Module 5: "La Saggezza Avanzata di Mamma"** (Advanced Patterns)
+6.  **Module 6: "Dalla Cucina al Cloud"** (Serving, Deploying, and Observing)
+
+## Git Tagging Strategy
+
+We will use tags in the format `mX-sY` to mark the state of the code at each step.
+- `mX`: Module X
+- `sY`: Code Sample Y
+
+---
+
+## Detailed Slide & Code Sample Breakdown
+
+### **Module 1: Parliamo di Genkit**
+*   **Slide 1: Title Slide** - Genkit: Build Production-Ready AI Systems with Node.js & Google Cloud
+*   **Slide 2: Who are we?** - Intro to the presenter and the audience (Google Cloud CEs FSI).
+*   **Slide 3: The Challenge:** Moving from GenAI "Magic" (PoCs) to Production Systems.
+*   **Slide 4: Introducing Genkit:** An open-source framework to build, deploy, and monitor robust AI features.
+*   **Slide 5: Core Philosophy:** Declarative, Composable, Observable, Portable.
+*   **Slide 6: The Genkit Ecosystem:** Supported Models (Gemini on Vertex AI!), Plugins, and Tools.
+*   **Slide 7: Our Goal Today:** Build "ConsigliAI di Mamma", a wise financial advisor bot.
+
+### **Module 2: Il Primo Consiglio di Mamma**
+*   **Slide 8: Setup & "Hello, Mamma!"** - Your first Genkit flow.
+    *   **Tag: `m2-s1`**
+    *   **Code Sample 1:**
+        *   `package.json`: Dependencies (`genkit`, `@genkit-ai/vertexai`, `express`, `zod`).
+        *   `index.js`: Initialize Genkit with Vertex AI (`configureGenkit`). Define a basic flow `mammaSaysHello`.
+
+### **Module 3: Mamma Vuole Chiarezza**
+*   **Slide 9: The Power of Prompts: Giving Mamma a Personality & Making it Reusable.**
+    *   **Tag: `m3-s2`**
+    *   **Code Sample 2:**
+        *   Create `prompts/mamma.prompt` with a `name`, persona, and Handlebars templating (`{{question}}`).
+        *   Modify the flow to call the prompt by its name (`ai.prompt('mammaAdvicePrompt', ...)`).
+        *   Rename flow to `getMammaAdvice`.
+*   **Slide 10: Structured I/O (Method 1: Flow-level Schemas).**
+    *   **Tag: `m3-s3`**
+    *   **Code Sample 3:**
+        *   Add Zod schemas for `input` and `output` directly in the flow's definition in `index.js`.
+*   **Slide 11: Structured I/O (Method 2: Inline Prompt Schemas).**
+    *   **Tag: `m3-s4`**
+    *   **Code Sample 4:**
+        *   Modify `prompts/mamma.prompt`: Add an `output` block with an inline Zod schema.
+        *   Remove the `output` schema from the flow definition.
+*   **Slide 12: Structured I/O (Method 3: Referenced Prompt Schemas).**
+    *   **Tag: `m3-s5`**
+    *   **Code Sample 5:**
+        *   Create `src/schemas.js`: Define and export `MammaAdviceSchema`.
+        *   Modify `index.js`: Register the schema with `defineSchema('mammaAdvice', ...)`.
+        *   Modify `prompts/mamma.prompt`: Reference the schema by name: `schema: mammaAdvice`.
+
+### **Module 4: Mamma si Informa**
+*   **Slide 14: Giving Mamma Tools (Part 1): Custom Calculator.**
+    *   **Tag: `m4-s7`**
+    *   **Code Sample 7:**
+        *   Create a custom tool `calculateInvestment` with `defineTool`.
+        *   Add the tool to the `prompt` call.
+*   **Slide 15: Giving Mamma Tools (Part 2): Grounding with Google Search.**
+    *   **Tag: `m4-s8`**
+    *   **Code Sample 8:**
+        *   Update Genkit config to add the `googleSearch` tool.
+        *   Update the prompt to encourage using search.
+
+### **Module 5: La Saggezza Avanzata di Mamma**
+*   **Slide 16: Multimodality: Mamma's "Financial Care Package".**
+    *   **Tag: `m5-s9`**
+    *   **Code Sample 9:**
+        *   Update the flow to call `generate` a second time with a multimodal model to generate an image.
+*   **Slide 17: Agentic Patterns: Iterative Refinement.**
+    *   **Tag: `m5-s10`**
+    *   **Code Sample 10 (Conceptual):**
+        *   Describe the pattern: Generate advice -> Critique -> Loop to refine.
+*   **Slide 18: Persistent Chat: Mamma Remembers!**
+    *   **Tag: `m5-s11`**
+    *   **Code Sample 11:**
+        *   Wrap the flow definition with `withMemory()`.
+
+### **Module 6: Dalla Cucina al Cloud**
+*   **Slide 19: The Local Dev Experience: Traces are your best friend.**
+    *   **Action:** Deep dive into a complex trace, showing inputs, tool calls, and outputs.
+*   **Slide 20: Exposing Flows as Services: The Express Integration.**
+    *   **Action:** Highlight `startFlowServer()` in `index.js` and explain it creates REST endpoints. Show how to `curl` the endpoint.
+*   **Slide 21: Deploying to Cloud Run.**
+    *   **Action:** Show the `Dockerfile`, the `genkit deploy` command, and the Cloud Run service.
+*   **Slide 22: Observability in Google Cloud.**
+    *   **Action:** Show the trace from the deployed app in Google Cloud Trace.
+*   **Slide 23: Recap & Thank You.**
+*   **Slide 24: Q&A.**
