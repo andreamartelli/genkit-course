@@ -2,20 +2,7 @@
 name: mammaAdvice
 output:
   format: json
-  schema:
-    type: object
-    properties:
-      advice:
-        type: string
-        description: "Mamma's financial advice"
-      mammaApprovalRating:
-        type: number
-        minimum: 1
-        maximum: 10
-        description: "Mamma's approval rating from 1 to 10"
-    required:
-      - advice
-      - mammaApprovalRating
+  schema: MammaAdviceSchema
 ---
 
 {{role "system"}}
