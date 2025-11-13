@@ -45,24 +45,24 @@ We will use tags in the format `mX-sY` to mark the state of the code at each ste
 *   **Slide 9: The Power of Prompts: Giving Mamma a Personality & Making it Reusable.**
     *   **Tag: `m3-s2`**
     *   **Code Sample 2:**
-        *   Create `prompts/mamma.prompt` with a `name`, persona, and Handlebars templating (`{{question}}`).
-        *   Modify the flow to call the prompt by its name (`ai.prompt('mammaAdvicePrompt', ...)`).
-        *   Rename flow to `getMammaAdvice`.
-*   **Slide 10: Structured I/O (Method 1: Flow-level Schemas).**
+        *   Create `prompts/mammaAdvice.prompt` with a `name`, persona, and Handlebars templating (`{{question}}`).
+        *   Modify the flow to call the prompt by its name (`ai.prompt('mammaAdvice', ...)`).
+*   **Slide 10: Structured I/O (Method 1: Flow-level & Referenced Schemas).**
     *   **Tag: `m3-s3`**
     *   **Code Sample 3:**
-        *   Add Zod schemas for `input` and `output` directly in the flow's definition in `index.js`.
+        *   Add a Zod schema to the flow's `outputSchema`.
+        *   Refactor immediately by creating `src/schemas.js` and moving the schema definition there.
+        *   Update the flow to import and use the schema from `src/schemas.js`.
 *   **Slide 11: Structured I/O (Method 2: Inline Prompt Schemas).**
     *   **Tag: `m3-s4`**
     *   **Code Sample 4:**
-        *   Modify `prompts/mamma.prompt`: Add an `output` block with an inline Zod schema.
-        *   Remove the `output` schema from the flow definition.
+        *   Modify `prompts/mammaAdvice.prompt`: Add an `output` block with an inline Zod schema.
+        *   Remove the `outputSchema` from the flow definition in `src/flows/mamma.js`.
 *   **Slide 12: Structured I/O (Method 3: Referenced Prompt Schemas).**
     *   **Tag: `m3-s5`**
     *   **Code Sample 5:**
-        *   Create `src/schemas.js`: Define and export `MammaAdviceSchema`.
-        *   Modify `index.js`: Register the schema with `defineSchema('mammaAdvice', ...)`.
-        *   Modify `prompts/mamma.prompt`: Reference the schema by name: `schema: mammaAdvice`.
+        *   Modify `src/genkit.js`: Register the schema from `src/schemas.js` with `defineSchema('mammaAdvice', ...)`.
+        *   Modify `prompts/mammaAdvice.prompt`: Reference the schema by its registered name: `schema: mammaAdvice`.
 
 ### **Module 4: Mamma si Informa**
 *   **Slide 14: Giving Mamma Tools (Part 1): Custom Calculator.**
