@@ -53,14 +53,19 @@ We will use tags in the format `mX-sY` to mark the state of the code at each ste
         *   Add a Zod schema to the flow's `outputSchema`.
         *   Refactor immediately by creating `src/schemas.js` and moving the schema definition there.
         *   Update the flow to import and use the schema from `src/schemas.js`.
-*   **Slide 11: Structured I/O (Method 2: Inline Prompt Schemas).**
+*   **Slide 11: Prompt Composition with Partials.**
     *   **Tag: `m3-s4`**
     *   **Code Sample 4:**
-        *   Modify `prompts/mammaAdvice.prompt`: Add an `output` block with an inline Zod schema.
-        *   Remove the `outputSchema` from the flow definition in `src/flows/mamma.js`.
-*   **Slide 12: Structured I/O (Method 3: Referenced Prompt Schemas).**
+        *   Create `prompts/mammaPersona.prompt` to hold the core persona.
+        *   Update `prompts/mammaAdvice.prompt` to include the persona using `{{> mammaPersona}}`.
+*   **Slide 12: Structured I/O (Method 2: Inline Prompt Schemas).**
     *   **Tag: `m3-s5`**
     *   **Code Sample 5:**
+        *   Modify `prompts/mammaAdvice.prompt`: Add an `output` block with an inline Zod schema.
+        *   Remove the `outputSchema` from the flow definition in `src/flows/mamma.js`.
+*   **Slide 13: Structured I/O (Method 3: Referenced Prompt Schemas).**
+    *   **Tag: `m3-s6`**
+    *   **Code Sample 6:**
         *   Modify `src/genkit.js`: Register the schema from `src/schemas.js` with `defineSchema('mammaAdvice', ...)`.
         *   Modify `prompts/mammaAdvice.prompt`: Reference the schema by its registered name: `schema: mammaAdvice`.
 

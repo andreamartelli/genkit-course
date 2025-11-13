@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { z } from 'genkit';
 import { ai } from '../genkit.js';
-import { MammaAdviceSchema } from '../schemas.js';
+import { InputQuestionSchema, MammaAdviceSchema } from '../schemas.js';
 
 // Load prompt
 const advicePrompt = ai.prompt('mammaAdvice');
@@ -24,9 +23,7 @@ const advicePrompt = ai.prompt('mammaAdvice');
 export const getMammaAdvice = ai.defineFlow(
   {
     name: 'getMammaAdvice',
-    inputSchema: z.object({
-      question: z.string().describe("The user's financial question or topic"),
-    }),
+    inputSchema: InputQuestionSchema,
     outputSchema: MammaAdviceSchema,
   },
   async (input) => {
