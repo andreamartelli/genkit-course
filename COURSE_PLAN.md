@@ -70,10 +70,10 @@ We will use tags in the format `mX-sY` to mark the state of the code at each ste
         *   Modify `prompts/mammaAdvice.prompt`: Reference the schema by its registered name: `schema: mammaAdvice`.
 
 ### **Module 4: Mamma si Informa**
-*   **Slide 14: Giving Mamma Tools (Part 1): Custom Calculator.**
+*   **Slide 14: Giving Mamma Tools (Part 1): Custom Exchange Rate Tool.**
     *   **Tag: `m4-s7`**
     *   **Code Sample 7:**
-        *   Create a custom tool `calculateInvestment` with `defineTool`.
+        *   Create a custom tool `getExchangeRate` that calls a public API to fetch currency exchange rates.
         *   Add the tool to the `prompt` call.
 *   **Slide 15: Giving Mamma Tools (Part 2): Grounding with Google Search.**
     *   **Tag: `m4-s8`**

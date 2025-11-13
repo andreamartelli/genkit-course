@@ -16,6 +16,7 @@
 
 import { ai } from '../genkit.js';
 import { InputQuestionSchema } from '../schemas.js';
+import { getExchangeRate } from '../tools/exchange.js';
 
 // Load prompt
 const advicePrompt = ai.prompt('mammaAdvice');
@@ -26,7 +27,10 @@ export const getMammaAdvice = ai.defineFlow(
     inputSchema: InputQuestionSchema,
   },
   async (input) => {
-    const response = await advicePrompt(input);
+    const response = await advicePrompt(
+      { question: input.question },
+      { tools: [getExchangeRate] }
+    );
     return response.output;
   }
 );
