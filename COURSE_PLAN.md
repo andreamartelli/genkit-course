@@ -75,7 +75,7 @@ We will use tags in the format `mX-sY` to mark the state of the code at each ste
     *   **Code Sample 7:**
         *   Create a custom tool `getExchangeRate` that calls a public API to fetch currency exchange rates.
         *   Add the tool to the `prompt` call.
-*   **Slide 15: Agentic Patterns - Conditional Routing.**
+*   **Slide 15: More Tools - Grounding and Agentic Patterns.**
     *   **Tag: `m4-s8`**
     *   **Code Sample 8:**
         *   Implement a router prompt to classify user intent.
