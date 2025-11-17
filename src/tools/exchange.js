@@ -28,6 +28,7 @@ export const getExchangeRate = ai.defineTool(
       if (rate === undefined) {
         throw new Error(`Rate for ${toCurrency} not found in response.`);
       }
+      
       return { rate };
     } catch (error) {
       console.error('Error fetching exchange rate:', error);
