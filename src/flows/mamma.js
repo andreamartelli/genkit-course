@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
+import { int } from 'zod/v4';
 import { ai } from '../genkit.js';
 import { InputQuestionSchema } from '../schemas.js';
 import { getExchangeRate } from '../tools/exchange.js';
 
-// Load prompt
+// Load prompts
+const routerPrompt = ai.prompt('router');
 const advicePrompt = ai.prompt('mammaAdvice');
+const searchPrompt = ai.prompt('mammaSearch');
 
 export const getMammaAdvice = ai.defineFlow(
   {
@@ -27,10 +30,31 @@ export const getMammaAdvice = ai.defineFlow(
     inputSchema: InputQuestionSchema,
   },
   async (input) => {
-    const response = await advicePrompt(
-      { question: input.question },
-      { tools: [getExchangeRate] }
-    );
-    return response.output;
+    // 1. Route to the correct prompt based on intent.
+    const route = await routerPrompt(input);
+    const intent = route.output.intent;
+    
+    console.log('[Routing] You asked for: %s', intent);
+
+    // 2. Execute the appropriate prompt with the correct tools.
+    if (intent === 'general_advice') {
+      const response = await advicePrompt(input, {
+        tools: [getExchangeRate]
+      });
+      return response.output;
+    } else if (intent === 'market_news') {
+      const response = await searchPrompt(input, {
+        config: {
+          tools: [{ // native Gemini API parameters - config passthrough
+            googleSearch: {}
+          }]
+        }
+      });
+      return response.output;
+    } else {
+      // As a fallback, always route to the advice prompt with no tools
+      const response = await advicePrompt(input);
+      return response.output;
+    }
   }
 );

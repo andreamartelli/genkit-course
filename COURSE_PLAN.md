@@ -75,11 +75,12 @@ We will use tags in the format `mX-sY` to mark the state of the code at each ste
     *   **Code Sample 7:**
         *   Create a custom tool `getExchangeRate` that calls a public API to fetch currency exchange rates.
         *   Add the tool to the `prompt` call.
-*   **Slide 15: Giving Mamma Tools (Part 2): Grounding with Google Search.**
+*   **Slide 15: Agentic Patterns - Conditional Routing.**
     *   **Tag: `m4-s8`**
     *   **Code Sample 8:**
-        *   Update Genkit config to add the `googleSearch` tool.
-        *   Update the prompt to encourage using search.
+        *   Implement a router prompt to classify user intent.
+        *   Refactor the main flow to first call the router.
+        *   Use an if/else block to conditionally call different prompts with the appropriate tools (`getExchangeRate` or native `googleSearch`).
 
 ### **Module 5: La Saggezza Avanzata di Mamma**
 *   **Slide 16: Multimodality: Mamma's "Financial Care Package".**
