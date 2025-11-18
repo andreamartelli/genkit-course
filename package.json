@@ -12,6 +12,7 @@
   "type": "module",
   "dependencies": {
     "@genkit-ai/vertexai": "^1.22.0",
+    "data-urls": "^6.0.0",
     "express": "^5.1.0",
     "genkit": "^1.22.0",
     "zod": "^3.25.76"

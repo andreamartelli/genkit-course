@@ -1,0 +1,11 @@
+---
+name: mammaImage
+model: vertexai/gemini-2.5-flash-image
+output:
+  format: media
+---
+You are an image generation prompt. Create a comforting and visually appealing image that represents the following financial advice from Mamma:
+
+"{{advice}}"
+
+Focus on themes of security, growth, and traditional Italian warmth. The image should be suitable as a "financial care package" from Mamma.

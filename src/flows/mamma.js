@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { int } from 'zod/v4';
+import parseDataURL from 'data-urls';
 import { ai } from '../genkit.js';
 import { InputQuestionSchema } from '../schemas.js';
 import { getExchangeRate } from '../tools/exchange.js';
@@ -23,6 +22,7 @@ import { getExchangeRate } from '../tools/exchange.js';
 const routerPrompt = ai.prompt('router');
 const advicePrompt = ai.prompt('mammaAdvice');
 const searchPrompt = ai.prompt('mammaSearch');
+const imagePrompt = ai.prompt('mammaImage');
 
 export const getMammaAdvice = ai.defineFlow(
   {
@@ -38,10 +38,30 @@ export const getMammaAdvice = ai.defineFlow(
 
     // 2. Execute the appropriate prompt with the correct tools.
     if (intent === 'general_advice') {
-      const response = await advicePrompt(input, {
+      const textResponse = await advicePrompt(input, {
         tools: [getExchangeRate]
       });
-      return response.output;
+
+      const adviceOutput = await textResponse.output;
+
+      // Generate an image based on Mamma's advice
+      const imageResponse = await imagePrompt(
+        { advice: adviceOutput.advice },
+        {
+          config: {
+            imageConfig: {
+              aspectRatio: '16:9'
+            }
+          }
+        }
+      );
+
+      const parsed = parseDataURL(imageResponse.media.url);
+      if(parsed) {
+        console.log('Image generated successfully.');
+      }
+
+      return { ...adviceOutput, imageData: imageResponse.media.url };
     } else if (intent === 'market_news') {
       const response = await searchPrompt(input, {
         config: {

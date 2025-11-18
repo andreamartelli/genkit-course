@@ -86,7 +86,9 @@ We will use tags in the format `mX-sY` to mark the state of the code at each ste
 *   **Slide 16: Multimodality: Mamma's "Financial Care Package".**
     *   **Tag: `m5-s9`**
     *   **Code Sample 9:**
-        *   Update the flow to call `generate` a second time with a multimodal model to generate an image.
+        *   Update `MammaAdviceSchema` to include an optional `imageUrl` field.
+        *   In the flow, after Mamma gives text advice, make a second `ai.generate` call using a multimodal model to generate an image based on the advice.
+        *   Include the generated image URL in the flow's output.
 *   **Slide 17: Agentic Patterns: Iterative Refinement.**
     *   **Tag: `m5-s10`**
     *   **Code Sample 10 (Conceptual):**
