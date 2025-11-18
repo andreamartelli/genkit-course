@@ -16,6 +16,7 @@
 
 import { genkit } from 'genkit';
 import { vertexAI } from '@genkit-ai/vertexai';
+import { yahooFinancePlugin } from '../tools/yahooFinanceMcp.js';
 
 export const ai = genkit({
   plugins: [
@@ -23,6 +24,7 @@ export const ai = genkit({
       projectId: 'mamma-ai-fsi',
       location: 'us-central1', // You can change this to 'europe-west1' if preferred
     }),
+    yahooFinancePlugin, // Register the MCP client as a plugin
   ],
   model: vertexAI.model('gemini-2.5-flash', {
     temperature: 1,

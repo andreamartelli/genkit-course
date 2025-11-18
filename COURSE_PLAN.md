@@ -94,10 +94,11 @@ We will use tags in the format `mX-sY` to mark the state of the code at each ste
     *   **Code Sample 10:**
         *   Create a `critique.prompt` to evaluate the quality of Mamma's advice.
         *   Implement a refinement loop in the main flow that calls the advice prompt, then the critique prompt, and feeds the critique back into the advice prompt to improve the response.
-*   **Slide 18: Persistent Chat: Mamma Remembers!**
+*   **Slide 18: Interactive Chats.**
     *   **Tag: `m5-s11`**
-    *   **Code Sample 11:**
-        *   Wrap the flow definition with `withMemory()`.
+    *   **Code Sample 11 (Conceptual/Slide-only):**
+        *   This step is conceptual. The slide will explain how to build stateful, interactive chats easily using the `ai.chat()` method in Genkit.
+        *   `ai.chat()` is a specialized helper that automatically manages history and state, simplifying the creation of chatbots.
 
 ### **Module 6: Dalla Cucina al Cloud**
 *   **Slide 19: The Local Dev Experience: Traces are your best friend.**

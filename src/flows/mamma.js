@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import parseDataURL from 'data-urls';
 import { ai } from '../genkit.js';
 import { InputQuestionSchema } from '../schemas.js';
 import { getExchangeRate } from '../tools/exchange.js';
+import { YahooFinanceMCP } from '../tools/yahooFinanceMcp.js';
 
 // Load prompts
 const routerPrompt = ai.prompt('router');
@@ -24,6 +26,9 @@ const advicePrompt = ai.prompt('mammaAdvice');
 const searchPrompt = ai.prompt('mammaSearch');
 const imagePrompt = ai.prompt('mammaImage');
 const critiquePrompt = ai.prompt('critique');
+
+// create the Yahoo Finance MCP client
+const yahooFinanceMcp = new YahooFinanceMCP();
 
 export const getMammaAdvice = ai.defineFlow(
   {
@@ -40,6 +45,15 @@ export const getMammaAdvice = ai.defineFlow(
     // 2. Execute the appropriate prompt with the correct tools.
     if (intent === 'general_advice') {
 
+      // Retrieve tools from the MCP client
+      console.log('Connecting to the Yahoo Finance MCP server...');
+      const yfClient = await yahooFinanceMcp.getClient();
+      const yfTools = await yfClient.getActiveTools(ai);
+      console.log('Yahoo Finance tools list obtained!');
+      for(const t of yfTools) {
+        console.log(' - ', t.__action.name);
+      }
+
       // Generate the general advice using an iterative refinement loop (critique pattern)
       let adviceOutput;
       let currentAdvice = '';
@@ -55,7 +69,7 @@ export const getMammaAdvice = ai.defineFlow(
           critique: critique, // Pass previous critique (if any)
           draft: currentAdvice, // Pass previous draft (if any)
         }, {
-          tools: [getExchangeRate]
+          tools: [...yfTools, getExchangeRate]
         });
 
         adviceOutput = textResponse.output;
@@ -87,6 +101,7 @@ export const getMammaAdvice = ai.defineFlow(
         }
       );
 
+      // check image data consistency
       const parsed = parseDataURL(imageResponse.media.url);
       if (parsed) {
         console.log('Advice fully generated.');
