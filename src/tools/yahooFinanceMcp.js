@@ -14,13 +14,27 @@
  * limitations under the License.
  */
 
-import { mcp } from '@genkit-ai/mcp';
+// Reference: https://github.com/leoncuhk/mcp-yahoo-finance
 
-// Create and export a single, configured MCP plugin instance.
-// The key 'yfmcp' becomes the prefix for all tools from this server.
-export const yahooFinancePlugin = mcp({
-  yfmcp: {
-    command: 'uvx',
-    args: ['mcp-yahoo-finance'],
-  },
-});
+import { createMcpClient } from '@genkit-ai/mcp';
+
+export class YahooFinanceMCP {
+  constructor() {
+    // Init the MCP connection
+    this.client = createMcpClient({
+      name: 'mcpYahooFinance',
+      mcpServer: {
+        command: 'uvx',
+        args: ['mcp-yahoo-finance']
+      }
+    });
+    console.log('Yahoo Finance MCP Client created.');
+  }
+
+  async getClient() {
+    console.log('Waiting for MCP client to be ready...');
+    await this.client.ready();
+    console.log('MCP client ready!');
+    return this.client;
+  }
+}
