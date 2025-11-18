@@ -52,9 +52,11 @@ export const getMammaAdvice = ai.defineFlow(
       });
       return response.output;
     } else {
-      // As a fallback, always route to the advice prompt with no tools
-      const response = await advicePrompt(input);
-      return response.output;
+      // intent not recognized 
+      return {
+        response: 'Mamma doesn\'t know :-( ...',
+        mammaApprovalRating: '0'
+      }
     }
   }
 );
