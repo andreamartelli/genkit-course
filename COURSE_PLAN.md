@@ -91,8 +91,9 @@ We will use tags in the format `mX-sY` to mark the state of the code at each ste
         *   Include the generated image URL in the flow's output.
 *   **Slide 17: Agentic Patterns: Iterative Refinement.**
     *   **Tag: `m5-s10`**
-    *   **Code Sample 10 (Conceptual):**
-        *   Describe the pattern: Generate advice -> Critique -> Loop to refine.
+    *   **Code Sample 10:**
+        *   Create a `critique.prompt` to evaluate the quality of Mamma's advice.
+        *   Implement a refinement loop in the main flow that calls the advice prompt, then the critique prompt, and feeds the critique back into the advice prompt to improve the response.
 *   **Slide 18: Persistent Chat: Mamma Remembers!**
     *   **Tag: `m5-s11`**
     *   **Code Sample 11:**

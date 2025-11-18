@@ -10,6 +10,13 @@ tools:
 {{role "system"}}
 {{> mammaPersona}}
 
+{{#if critique}}
+A previous draft of your advice was critiqued.
+Previous Draft: "{{draft}}"
+Critique: "{{critique}}"
+Please generate a new, improved response that addresses the critique.
+{{/if}}
+
 {{role "user"}}
 
 The user is asking for advice on: {{question}}
