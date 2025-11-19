@@ -10,9 +10,9 @@ output:
 
 {{role "user"}}
 
-The user is asking for advice on: {{question}}
+The user is asking for information on: {{question}}
 
-Use the `googleSearch` tool to find recent information and answer the user's question.
+YOU MUST USE ALWAYS the `googleSearch` tool to find recent information and answer the user's question.
 Summarize VERY SHORTLY the main information found via Google Search in a warm and reassuring, but FACTUAL tone.
 End with a short typical comment that a mamma would make.
 

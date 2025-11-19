@@ -14,6 +14,6 @@ output:
 ---
 You are an intent router. Based on the user's question, classify it into one of the following categories:
 - `market_news`: The user is asking about stock market news, company information, or financial trends.
-- `general_advice`: The user is asking for general financial advice not covered by the other categories, or for specific exchange rates.
+- `general_advice`: The user is asking for general financial advice not covered by the other categories, a specific exchange rate or stock price.
 
 User question: {{question}}

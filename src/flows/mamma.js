@@ -18,7 +18,6 @@ import parseDataURL from 'data-urls';
 import { ai } from '../genkit.js';
 import { InputQuestionSchema } from '../schemas.js';
 import { getExchangeRate } from '../tools/exchange.js';
-import { YahooFinanceMCP } from '../tools/yahooFinanceMcp.js';
 
 // Load prompts
 const routerPrompt = ai.prompt('router');
@@ -26,9 +25,6 @@ const advicePrompt = ai.prompt('mammaAdvice');
 const searchPrompt = ai.prompt('mammaSearch');
 const imagePrompt = ai.prompt('mammaImage');
 const critiquePrompt = ai.prompt('critique');
-
-// create the Yahoo Finance MCP client
-const yahooFinanceMcp = new YahooFinanceMCP();
 
 export const getMammaAdvice = ai.defineFlow(
   {
@@ -63,11 +59,15 @@ export const getMammaAdvice = ai.defineFlow(
           critique: critique, // Pass previous critique (if any)
           draft: currentAdvice, // Pass previous draft (if any)
         }, {
-          tools: [/*...yfTools,*/ getExchangeRate]
+          //tools: [/*...yfTools,*/ getExchangeRate]
+          tools: [
+            'mcp-yahoo-finance/get_current_stock_price',
+            getExchangeRate
+          ]
         });
 
         adviceOutput = textResponse.output;
-        currentAdvice = adviceOutput.advice;
+        currentAdvice = adviceOutput.response;
 
         // Critique the advice
         console.log(`[${i + 1}] Criticizing the draft advice...`);
@@ -86,7 +86,7 @@ export const getMammaAdvice = ai.defineFlow(
 
       // Generate an image for the FINAL refined advice
       const imageResponse = await imagePrompt(
-        { advice: adviceOutput.advice },
+        { advice: adviceOutput.response },
         {
           config: {
             imageConfig: {
