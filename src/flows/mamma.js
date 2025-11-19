@@ -45,9 +45,6 @@ export const getMammaAdvice = ai.defineFlow(
     // 2. Execute the appropriate prompt with the correct tools.
     if (intent === 'general_advice') {
 
-      // Retrieve tools from the MCP client
-      //const yfTools = await yahooFinanceMcp.getTools();
-
       // Generate the general advice using an iterative refinement loop (critique pattern)
       let adviceOutput;
       let currentAdvice = '';
@@ -58,12 +55,17 @@ export const getMammaAdvice = ai.defineFlow(
         console.log(`[Refinement Loop] Iteration ${i + 1}`);
         console.log(`[${i + 1}] Generating draft advice...`);
         
+        // Retrieve tools from the MCP client
+        // NOTE: there is a bug in the Genkit MCP plugin, once solved it will be possible to cache tools
+        //       instead of getting them at each iteration.
+        const yfTools = await yahooFinanceMcp.getTools();
+
         const textResponse = await advicePrompt({
           question: input.question,
           critique: critique, // Pass previous critique (if any)
           draft: currentAdvice, // Pass previous draft (if any)
         }, {
-          tools: [/*...yfTools,*/ getExchangeRate]
+          tools: [...yfTools, getExchangeRate]
         });
 
         adviceOutput = textResponse.output;

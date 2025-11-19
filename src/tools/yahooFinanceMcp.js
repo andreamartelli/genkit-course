@@ -26,10 +26,8 @@ export class YahooFinanceMCP {
     this.client = createMcpClient({
       name: 'yahooFinanceClient',
       mcpServer: {
-        //command: 'uvx',
-        //args: ['mcp-yahoo-finance']
-        command: "npx",
-        args: ["-y", "@modelcontextprotocol/server-everything"]
+        command: 'uvx',
+        args: ['mcp-yahoo-finance']
       }
     });
     console.log('Yahoo Finance MCP Client created.');
@@ -44,14 +42,12 @@ export class YahooFinanceMCP {
 
   async getTools() {
     await this.getClient();
-    if(!this.tools) {
-      this.tools = await this.client.getActiveTools(ai);
-      console.log('\n* Enumerating available tools...');
-      for(const t of this.tools) {
-        console.log(' - ', t.__action.name);
-      }
-      console.log('\n');
+    const tools = await this.client.getActiveTools(ai);
+    console.log('\n* Enumerating available tools...');
+    for(const t of tools) {
+      console.log(' - ', t.__action.name);
     }
-    return this.tools;
+    console.log('\n');
+    return tools;
   }
 }
