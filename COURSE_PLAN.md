@@ -1,3 +1,75 @@
+# Participant Quickstart Guide
+
+This guide provides the steps to set up your local environment to run the course project and follow along.
+
+### Prerequisites
+
+Make sure you have the following software installed on your workstation:
+
+- **Node.js** (v20.x or later)
+- **Python** (v3.8 or later)
+- **Google Cloud SDK** (`gcloud` CLI)
+- **Git**
+- **pipx** (Python package installer for applications)
+
+### Step 1: Google Cloud Project Setup
+
+1.  **Create a new Google Cloud Project** or select an existing one.
+2.  **Enable the Vertex AI API.** You can do this by navigating to the Vertex AI API page in the Cloud Console and clicking "Enable", or by running:
+    ```bash
+    gcloud services enable aiplatform.googleapis.com
+    ```
+
+### Step 2: Authenticate the gcloud CLI
+
+In your terminal, run the following commands to log in and set your active project. Replace `[YOUR_PROJECT_ID]` with your actual Google Cloud project ID.
+
+```bash
+gcloud auth login
+gcloud config set project [YOUR_PROJECT_ID]
+```
+
+### Step 3: Install `uvx` for MCP Server Execution
+
+To run the external tools provided via the Model-Context Protocol (MCP), you need to install `uvx`. `uvx` will automatically manage the Python MCP server package.
+
+First, ensure `pipx` is installed (if not already):
+```bash
+python3 -m pip install --user pipx
+python3 -m pipx ensurepath
+```
+Then, install `uvx`:
+```bash
+pipx install uv
+```
+
+### Step 4: Get the Course Code
+
+Clone the repository from our shared location. (Note: The URL is a placeholder).
+
+```bash
+git clone https://github.com/your-org/consigliai-di-mamma.git
+cd consigliai-di-mamma
+```
+
+### Step 5: Install Dependencies & Run the Project
+
+Once you are inside the project directory, install the Node.js dependencies and start the Genkit Developer UI.
+
+```bash
+npm install
+npm start
+```
+
+### Step 6: Verify Your Setup
+
+1.  The `npm start` command should open the Genkit Developer UI in your browser at `http://localhost:4000`.
+2.  In the UI, find the `getMammaAdvice` flow.
+3.  Run the flow with a simple question in the input field, like: `{"question": "Should I save more money?"}`.
+4.  If the setup is correct, you should see a successful run and a JSON output containing Mamma's advice.
+
+---
+
 # Genkit Course: "ConsigliAI di Mamma" - Masterplan
 
 This document outlines the full plan for the interactive Genkit course.
@@ -115,4 +187,4 @@ We will use tags in the format `mX-sY` to mark the state of the code at each ste
 *   **Slide 22: Observability in Google Cloud.**
     *   **Action:** Show the trace from the deployed app in Google Cloud Trace.
 *   **Slide 23: Recap & Thank You.**
-*   **Slide 24: Q&A.**
+*   **Slide 24: Q&A.
