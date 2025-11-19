@@ -94,9 +94,14 @@ We will use tags in the format `mX-sY` to mark the state of the code at each ste
     *   **Code Sample 10:**
         *   Create a `critique.prompt` to evaluate the quality of Mamma's advice.
         *   Implement a refinement loop in the main flow that calls the advice prompt, then the critique prompt, and feeds the critique back into the advice prompt to improve the response.
-*   **Slide 18: Interactive Chats.**
+*   **Slide 18: Advanced Tooling with MCP (Conceptual/Future).**
     *   **Tag: `m5-s11`**
-    *   **Code Sample 11 (Conceptual/Slide-only):**
+    *   **Code Sample 11 (Conceptual/Future):**
+        *   This step is currently skipped due to implementation complexities. It will conceptually demonstrate how to integrate tools from an external MCP server.
+        *   *Note to Presenter: This section is conceptual for now. It will be addressed in a future iteration.* 
+*   **Slide 19: Interactive Chats.**
+    *   **Tag: `m5-s12`**
+    *   **Code Sample 12 (Conceptual/Slide-only):**
         *   This step is conceptual. The slide will explain how to build stateful, interactive chats easily using the `ai.chat()` method in Genkit.
         *   `ai.chat()` is a specialized helper that automatically manages history and state, simplifying the creation of chatbots.
 

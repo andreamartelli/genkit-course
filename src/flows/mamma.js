@@ -46,13 +46,7 @@ export const getMammaAdvice = ai.defineFlow(
     if (intent === 'general_advice') {
 
       // Retrieve tools from the MCP client
-      console.log('Connecting to the Yahoo Finance MCP server...');
-      const yfClient = await yahooFinanceMcp.getClient();
-      const yfTools = await yfClient.getActiveTools(ai);
-      console.log('Yahoo Finance tools list obtained!');
-      for(const t of yfTools) {
-        console.log(' - ', t.__action.name);
-      }
+      //const yfTools = await yahooFinanceMcp.getTools();
 
       // Generate the general advice using an iterative refinement loop (critique pattern)
       let adviceOutput;
@@ -69,7 +63,7 @@ export const getMammaAdvice = ai.defineFlow(
           critique: critique, // Pass previous critique (if any)
           draft: currentAdvice, // Pass previous draft (if any)
         }, {
-          tools: [...yfTools, getExchangeRate]
+          tools: [/*...yfTools,*/ getExchangeRate]
         });
 
         adviceOutput = textResponse.output;
@@ -87,6 +81,7 @@ export const getMammaAdvice = ai.defineFlow(
           break;
         }
       }
+      //(await yahooFinanceMcp.getClient()).disable();
       // End of the critique loop
 
       // Generate an image for the FINAL refined advice
