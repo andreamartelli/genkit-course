@@ -96,9 +96,9 @@ We will use tags in the format `mX-sY` to mark the state of the code at each ste
         *   Implement a refinement loop in the main flow that calls the advice prompt, then the critique prompt, and feeds the critique back into the advice prompt to improve the response.
 *   **Slide 18: Advanced Tooling with MCP (Conceptual/Future).**
     *   **Tag: `m5-s11`**
-    *   **Code Sample 11 (Conceptual/Future):**
-        *   This step is currently skipped due to implementation complexities. It will conceptually demonstrate how to integrate tools from an external MCP server.
-        *   *Note to Presenter: This section is conceptual for now. It will be addressed in a future iteration.* 
+    *   **Code Sample 11:**
+        *   Integrate an MCP client to consume the `mcp-yahoo-finance` MCP server
+        *   Minor tweaks to the `router` and `mammaAdvice` prompt to properly use the tool.
 *   **Slide 19: Interactive Chats.**
     *   **Tag: `m5-s12`**
     *   **Code Sample 12 (Conceptual/Slide-only):**
