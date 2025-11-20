@@ -17,8 +17,7 @@
 // Reference: https://github.com/leoncuhk/mcp-yahoo-finance
 
 import { ai } from '../genkit.js';
-//import { createMcpClient } from '@genkit-ai/mcp';
-import { mcpClient } from 'genkitx-mcp';
+import { createMcpClient } from '@genkit-ai/mcp';
 
 /**
  * Singleton class that wraps the mcpClient for convenience
@@ -37,9 +36,9 @@ class YahooFinanceMCP {
 
   constructor() {
     // Init the MCP connection
-    this._client = mcpClient({
-      name: 'mcp-yahoo-finance',
-      serverProcess: {
+    this.client = createMcpClient({
+      name: 'yahooFinanceClient',
+      mcpServer: {
         command: 'uvx',
         args: ['mcp-yahoo-finance']
       }
@@ -55,21 +54,15 @@ class YahooFinanceMCP {
     return this._client;
   }
 
-  /**
-   * 
-   * @returns 
-   */
-  async listTools() {
-    await this._client.ready();
-    if(!this._tools) {
-      this._tools = await this._client.getActiveTools(ai);
-      console.log('\n* Enumerating available tools...');
-      for(const t of this._tools) {
-        console.log(' - ', t.__action.name);
-      }
-      console.log('\n');
+  async getTools() {
+    await this.getClient();
+    const tools = await this.client.getActiveTools(ai);
+    console.log('\n* Enumerating available tools...');
+    for(const t of tools) {
+      console.log(' - ', t.__action.name);
     }
-    return this._tools;
+    console.log('\n');
+    return tools;
   }
 }
 
