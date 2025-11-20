@@ -18,6 +18,7 @@ import parseDataURL from 'data-urls';
 import { ai } from '../genkit.js';
 import { InputQuestionSchema } from '../schemas.js';
 import { getExchangeRate } from '../tools/exchange.js';
+import YahooFinanceMcp from '../tools/yahooFinanceMcp.js';
 
 // Load prompts
 const routerPrompt = ai.prompt('router');
@@ -54,7 +55,7 @@ export const getMammaAdvice = ai.defineFlow(
         // Retrieve tools from the MCP client
         // NOTE: there is a bug in the Genkit MCP plugin, once solved it will be possible to cache tools
         //       instead of getting them at each iteration.
-        const yfTools = await yahooFinanceMcp.getTools();
+        const yfTools = await YahooFinanceMcp.getTools();
 
         const textResponse = await advicePrompt({
           question: input.question,

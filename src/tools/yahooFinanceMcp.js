@@ -26,6 +26,8 @@ class YahooFinanceMCP {
 
   /**
    * @private
+   * BUG: due to a bug in Genkit it is not possible to cache tools.
+   * See: https://github.com/firebase/genkit/pull/3828
    */
   _tools = null;
 
@@ -36,7 +38,7 @@ class YahooFinanceMCP {
 
   constructor() {
     // Init the MCP connection
-    this.client = createMcpClient({
+    this._client = createMcpClient({
       name: 'yahooFinanceClient',
       mcpServer: {
         command: 'uvx',
@@ -50,13 +52,13 @@ class YahooFinanceMCP {
    * Returns the MCP client (it's a Genkit plugin)
    * @returns GenkitPlugin
    */
-  getClient() {
-    return this._client;
+  async getClient() {
+    return await this._client.ready();
   }
 
   async getTools() {
     await this.getClient();
-    const tools = await this.client.getActiveTools(ai);
+    const tools = await this._client.getActiveTools(ai);
     console.log('\n* Enumerating available tools...');
     for(const t of tools) {
       console.log(' - ', t.__action.name);
