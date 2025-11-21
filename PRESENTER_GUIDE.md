@@ -17,8 +17,9 @@ Welcome, presenter! This guide is your step-by-step companion for delivering the
 **Action:**
 1.  Direct participants to the `README.md` file in the repository.
 2.  Instruct them to run the `setup.sh` script: `./setup.sh`.
-3.  Emphasize that they must follow the on-screen prompts, especially for the Google Cloud SDK installation and providing their Project ID.
-4.  Ensure everyone has successfully run `npm start` and can see the `getMammaAdvice` flow in the Genkit Developer UI at `http://localhost:4000`.
+3.  Emphasize that they must follow the on-screen prompts, especially for providing their Project ID.
+4.  Explain that the script will automatically enable the necessary Google Cloud APIs (Vertex AI, Compute Engine) and grant the required IAM roles for the default Compute Engine service account.
+5.  Ensure everyone has successfully run `npm start` and can see the `getMammaAdvice` flow in the Genkit Developer UI at `http://localhost:4000`.
 
 ---
 

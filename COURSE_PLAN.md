@@ -15,10 +15,7 @@ Make sure you have the following software installed on your workstation:
 ### Step 1: Google Cloud Project Setup
 
 1.  **Create a new Google Cloud Project** or select an existing one.
-2.  **Enable the Vertex AI API.** You can do this by navigating to the Vertex AI API page in the Cloud Console and clicking "Enable", or by running:
-    ```bash
-    gcloud services enable aiplatform.googleapis.com
-    ```
+2.  The `setup.sh` script will automatically enable the necessary APIs (Vertex AI, Compute Engine) and grant the required IAM roles for the default Compute Engine service account.
 
 ### Step 2: Authenticate the gcloud CLI
 

@@ -153,7 +153,54 @@ gcloud config set project "$GCLOUD_PROJECT_ID"
 
 info "Enabling the Vertex AI API (aiplatform.googleapis.com)..."
 gcloud services enable aiplatform.googleapis.com --project="$GCLOUD_PROJECT_ID"
-success "Vertex AI API enabled."
+
+info "Enabling the Compute Engine API (compute.googleapis.com) to ensure default service account exists..."
+gcloud services enable compute.googleapis.com --project="$GCLOUD_PROJECT_ID"
+
+success "Required APIs enabled."
+
+info "Granting 'Vertex AI User' role to the default Compute Engine service account..."
+PROJECT_NUMBER=$(gcloud projects describe "$GCLOUD_PROJECT_ID" --format="value(projectNumber)")
+SERVICE_ACCOUNT="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
+gcloud projects add-iam-policy-binding "$GCLOUD_PROJECT_ID" \
+    --member="serviceAccount:${SERVICE_ACCOUNT}" \
+    --role="roles/aiplatform.user" \
+    --condition=None \
+    --quiet
+success "IAM role granted to $SERVICE_ACCOUNT."
+
+info "Granting 'Storage Object Viewer' role to the default Compute Engine service account..."
+gcloud projects add-iam-policy-binding "$GCLOUD_PROJECT_ID" \
+    --member="serviceAccount:${SERVICE_ACCOUNT}" \
+    --role="roles/storage.objectViewer" \
+    --condition=None \
+    --quiet
+success "IAM role granted to $SERVICE_ACCOUNT."
+
+info "Granting 'Logging Log Writer' role to the default Compute Engine service account..."
+gcloud projects add-iam-policy-binding "$GCLOUD_PROJECT_ID" \
+    --member="serviceAccount:${SERVICE_ACCOUNT}" \
+    --role="roles/logging.logWriter" \
+    --condition=None \
+    --quiet
+success "IAM role granted to $SERVICE_ACCOUNT."
+
+info "Granting 'Artifact Registry Reader' role to the Cloud Build service account..."
+CLOUD_BUILD_SERVICE_ACCOUNT="${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com"
+gcloud projects add-iam-policy-binding "$GCLOUD_PROJECT_ID" \
+    --member="serviceAccount:${CLOUD_BUILD_SERVICE_ACCOUNT}" \
+    --role="roles/artifactregistry.reader" \
+    --condition=None \
+    --quiet
+success "IAM role granted to $CLOUD_BUILD_SERVICE_ACCOUNT."
+
+info "Granting 'Artifact Registry Writer' role to the Cloud Build service account..."
+gcloud projects add-iam-policy-binding "$GCLOUD_PROJECT_ID" \
+    --member="serviceAccount:${CLOUD_BUILD_SERVICE_ACCOUNT}" \
+    --role="roles/artifactregistry.writer" \
+    --condition=None \
+    --quiet
+success "IAM role granted to $CLOUD_BUILD_SERVICE_ACCOUNT."
 
 # --- Code Checkout ---
 REPO_URL="https://github.com/your-org/consigliai-di-mamma.git" # Placeholder URL
