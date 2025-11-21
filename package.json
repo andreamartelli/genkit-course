@@ -12,6 +12,7 @@
   "type": "module",
   "dependencies": {
     "@genkit-ai/express": "^1.24.0",
+    "@genkit-ai/firebase": "^1.24.0",
     "@genkit-ai/mcp": "^1.23.0",
     "@genkit-ai/vertexai": "^1.22.0",
     "data-urls": "^6.0.0",

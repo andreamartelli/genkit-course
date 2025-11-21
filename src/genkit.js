@@ -17,6 +17,10 @@
 import { genkit } from 'genkit';
 import { vertexAI } from '@genkit-ai/vertexai';
 
+// enables fine grained telemetry on GCP
+import { enableFirebaseTelemetry } from '@genkit-ai/firebase';
+enableFirebaseTelemetry();
+
 export const ai = genkit({
   plugins: [
     vertexAI({

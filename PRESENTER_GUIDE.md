@@ -181,11 +181,16 @@ Welcome, presenter! This guide is your step-by-step companion for delivering the
     *   **Action:** Run the `gcloud run deploy` command.
     *   Once deployed, show the service in the Google Cloud Console.
 
-*   **Slide 23: Observability in Google Cloud.**
+*   **Slide 22: Production Observability with Firebase**
+    *   **Code Demo (Tag: `m6-s14`):**
+        1.  **Action:** `git checkout m6-s14`
+        2.  **Explain the Goal:** "For production, we want robust, automatic tracing in Google Cloud. The Genkit Firebase plugin makes this incredibly simple."
+        3.  **Show `package.json`:** Point out the new `@genkit-ai/firebase` dependency.
+        4.  **Show `src/genkit.js`:** Highlight the two new lines: `import { enableFirebaseTelemetry } from '@genkit-ai/firebase';` and `enableFirebaseTelemetry();`. Explain that these two lines are all that's needed to configure Genkit to automatically send traces to Google Cloud Trace when running in a GCP environment.
     *   **Demonstrate:**
-        *   Call the deployed Cloud Run endpoint.
-        *   Go to the Cloud Trace dashboard in the Google Cloud Console.
-        *   Find and open the trace from the production call. Show that it's the *exact same* rich trace we had in the local Dev UI. This is the killer feature for production monitoring.
+        *   Re-deploy the application with these changes.
+        *   Call the production endpoint.
+        *   Go to the Cloud Trace dashboard and show the new, rich trace appearing automatically.
 
 *   **Slide 24: Recap & Thank You.**
-*   **Slide 25: Q&A.**
+*   **Slide 25: Q&A.****

@@ -177,13 +177,23 @@ gcloud projects add-iam-policy-binding "$GCLOUD_PROJECT_ID" \
     --quiet
 success "IAM role granted to $SERVICE_ACCOUNT."
 
-info "Granting 'Logging Log Writer' role to the default Compute Engine service account..."
+info "Granting Observability roles (Metric Writer, Trace Agent, Log Writer) to the default Compute Engine service account..."
+gcloud projects add-iam-policy-binding "$GCLOUD_PROJECT_ID" \
+    --member="serviceAccount:${SERVICE_ACCOUNT}" \
+    --role="roles/monitoring.metricWriter" \
+    --condition=None \
+    --quiet
+gcloud projects add-iam-policy-binding "$GCLOUD_PROJECT_ID" \
+    --member="serviceAccount:${SERVICE_ACCOUNT}" \
+    --role="roles/cloudtrace.agent" \
+    --condition=None \
+    --quiet
 gcloud projects add-iam-policy-binding "$GCLOUD_PROJECT_ID" \
     --member="serviceAccount:${SERVICE_ACCOUNT}" \
     --role="roles/logging.logWriter" \
     --condition=None \
     --quiet
-success "IAM role granted to $SERVICE_ACCOUNT."
+success "Observability IAM roles granted to $SERVICE_ACCOUNT."
 
 info "Granting 'Artifact Registry Reader' role to the Cloud Build service account..."
 CLOUD_BUILD_SERVICE_ACCOUNT="${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com"

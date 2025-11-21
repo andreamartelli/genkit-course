@@ -184,9 +184,11 @@ We will use tags in the format `mX-sY` to mark the state of the code at each ste
         *   Modify `src/tools/yahooFinanceMcp.js` to implement lazy initialization and environment detection (faking MCP on Cloud Run).
         *   Modify `package.json` to use `node index.js` for the `start` script (production-ready).
 *   **Slide 22: Deploying to Cloud Run (Live Demo).**
-    *   **Tag: `m6-s14`**
     *   **Action:** Run `gcloud run deploy`.
-*   **Slide 23: Observability in Google Cloud (Live Demo).**
-    *   **Action:** Call the production endpoint and show the corresponding trace appearing in the Google Cloud Trace dashboard.
-*   **Slide 24: Recap & Thank You.**
-*   **Slide 25: Q&A.
+*   **Slide 22: Production Observability with Firebase.**
+    *   **Tag: `m6-s14`**
+    *   **Code Sample 14:**
+        *   Add the `@genkit-ai/firebase` dependency to `package.json`.
+        *   Add `enableFirebaseTelemetry()` to `src/genkit.js` to automatically configure production-grade tracing.
+*   **Slide 23: Recap & Thank You.**
+*   **Slide 24: Q&A.
