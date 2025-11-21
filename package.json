@@ -4,7 +4,7 @@
   "description": "Genkit course project: Mamma's AI Financial Advisor",
   "main": "index.js",
   "scripts": {
-    "start": "genkit start -- node --watch index.js"
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "Andrea Martelli <amartelli@google.com>",

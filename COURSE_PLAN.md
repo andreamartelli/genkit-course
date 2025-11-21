@@ -163,11 +163,9 @@ We will use tags in the format `mX-sY` to mark the state of the code at each ste
     *   **Code Sample 10:**
         *   Create a `critique.prompt` to evaluate the quality of Mamma's advice.
         *   Implement a refinement loop in the main flow that calls the advice prompt, then the critique prompt, and feeds the critique back into the advice prompt to improve the response.
-*   **Slide 18: Advanced Tooling with MCP (Conceptual/Future).**
-    *   **Tag: `m5-s11`**
-    *   **Code Sample 11:**
-        *   Integrate an MCP client to consume the `mcp-yahoo-finance` MCP server
-        *   Minor tweaks to the `router` and `mammaAdvice` prompt to properly use the tool.
+*   **Slide 21: Deploying to Cloud Run (Live Demo).**
+    *   **Action:** Run `gcloud run deploy`.
+    *   **Explain the Faked MCP:** While deploying, explain that our `yahooFinanceMcp.js` code detects the Cloud Run environment (via `process.env.K_SERVICE`) and provides a dummy tool instead of starting the real `uvx` server. This is a crucial pattern for production deployments to ensure container startup is fast and reliable.
 *   **Slide 19: Interactive Chats.**
     *   **Tag: `m5-s12`**
     *   **Code Sample 12 (Conceptual/Slide-only):**
@@ -175,15 +173,20 @@ We will use tags in the format `mX-sY` to mark the state of the code at each ste
         *   `ai.chat()` is a specialized helper that automatically manages history and state, simplifying the creation of chatbots.
 
 ### **Module 6: Dalla Cucina al Cloud**
-*   **Slide 20: Exposing Flows as Services: The Express Integration.**
+*   **Slide 20: The Local Dev Experience & Express Integration.**
     *   **Tag: `m6-s12`**
     *   **Code Sample 12:**
         *   Create `src/server.js` to explicitly start the Express server using `startFlowServer` (or a manual Express setup).
         *   Update `index.js` to run the server.
-    *   **Action:** Demonstrate calling the flow endpoint with the correct `curl` command: `curl -d '{"data": {"question": "..."}}' ...`
-*   **Slide 21: Deploying to Cloud Run (Live Demo).**
-    *   **Action:** Run `genkit deploy` and show the deployed service in the Google Cloud Console.
-*   **Slide 22: Observability in Google Cloud (Live Demo).**
+*   **Slide 21: Prepare for Cloud Run Deployment.**
+    *   **Tag: `m6-s13`**
+    *   **Code Sample 13:**
+        *   Modify `src/tools/yahooFinanceMcp.js` to implement lazy initialization and environment detection (faking MCP on Cloud Run).
+        *   Modify `package.json` to use `node index.js` for the `start` script (production-ready).
+*   **Slide 22: Deploying to Cloud Run (Live Demo).**
+    *   **Tag: `m6-s14`**
+    *   **Action:** Run `gcloud run deploy`.
+*   **Slide 23: Observability in Google Cloud (Live Demo).**
     *   **Action:** Call the production endpoint and show the corresponding trace appearing in the Google Cloud Trace dashboard.
-*   **Slide 23: Recap & Thank You.**
-*   **Slide 24: Q&A.
+*   **Slide 24: Recap & Thank You.**
+*   **Slide 25: Q&A.

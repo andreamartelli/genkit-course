@@ -147,12 +147,12 @@ Welcome, presenter! This guide is your step-by-step companion for delivering the
         4.  **Show `src/flows/mamma.js`:** Walk through the `for` loop in the `general_advice` branch. Explain the draft -> critique -> refine cycle. Show how the critique from one iteration is passed to the next.
         5.  **Demonstrate:** Run a query like `{"question": "Should I invest in crypto?"}`. In the terminal, point out the `[Refinement Loop]` log messages, showing the agent is "thinking."
 
-*   **Slide 18: Advanced Tooling with MCP (Conceptual)**
+*   **Slide 18: Advanced Tooling with MCP**
     *   **Code Demo (Tag: `m5-s11`):**
         1.  **Action:** `git checkout m5-s11`
-        2.  **Explain the Concept:** "So far, all our tools have been defined in our own codebase. What if another team provides a set of tools as a separate service? That's what MCP is for."
-        3.  **Show `src/tools/yahooFinanceMcp.js`:** Explain that this class sets up a *client* to connect to an external tool server.
-        4.  **Show the commented-out code in `src/flows/mamma.js`:** Explain that this is where we would use the client to discover and use the external tools. Acknowledge the implementation complexity and state that for this course, it remains a conceptual demonstration of Genkit's powerful extensibility.
+        2.  **Explain the Concept:** "Now for an advanced topic. So far, all our tools have been in our codebase. MCP allows us to use tools from a completely separate service. We've added a client that connects to an external Yahoo Finance tool server."
+        3.  **Show `src/tools/yahooFinanceMcp.js`:** Briefly explain that this class starts the external server process (`uvx`) when run locally.
+        4.  **Demonstrate:** Run the flow locally with a question like `{"question": "What is the stock price of GOOG?"}`. Show the console logs where the real MCP server starts and the real tools are enumerated. Explain that the flow is now using tools from another process.
 
 *   **Slide 19: Interactive Chats (Conceptual)**
     *   **Talking Points:**
@@ -160,36 +160,32 @@ Welcome, presenter! This guide is your step-by-step companion for delivering the
         *   To build a true chatbot, you need to manage conversation history.
         *   Introduce `ai.chat()` as the high-level, easy way to do this. It's a specialized flow builder that handles state and history automatically. Show a conceptual code snippet on the slide.
 
----
+### **Module 6: Dalla Cucina al Cloud**
 
-## Module 6: Dalla Cucina al Cloud
+*   **Slide 20: The Local Dev Experience & Express Integration**
+    *   **Demonstrate (Dev UI):** Go back to the Dev UI. Open a complex trace (like one from the refinement loop with MCP). Click through each step: the router, the advice drafts, the critiques, the external MCP tool call. Emphasize how invaluable this is for debugging.
+    *   **Demonstrate (Express):**
+        1.  **Action:** `git checkout m6-s12`
+        2.  **Show `src/server.js`:** Explain that this file explicitly starts an Express server, making our app a standard web service.
+        3.  **Demonstrate `curl`:** Show how to call the flow with the correct `curl` command: `curl -X POST -H "Content-Type: application/json" -d '{"data": {"question": "..."}}' http://localhost:8080/getMammaAdvice`
 
-**Objective:** Show how to debug, deploy, and observe a Genkit application.
+*   **Slide 21: Prepare for Cloud Run Deployment**
+    *   **Code Demo (Tag: `m6-s13`):**
+        1.  **Action:** `git checkout m6-s13`
+        2.  **Explain the MCP Faking:**
+            *   **Show `src/tools/yahooFinanceMcp.js`:** Point out the `if (process.env.K_SERVICE)` block. Explain that `K_SERVICE` is an environment variable that Cloud Run automatically sets. "If this variable exists, we provide a simple, hardcoded dummy tool instead of starting the real server. This ensures our production container starts quickly and reliably."
+            *   **Explain the "Why":** "Running the external `uvx` process is great for local development, but it's not ideal for a production container. It can be complex and fragile inside Cloud Run, potentially causing startup failures or timeouts. This environment-aware code is a robust design pattern."
+        3.  **Show `package.json`:** Point out the `"start": "node index.js"` script. Explain that for production, we only run our application server, not the `genkit start` development console.
 
-*   **Slide 19: The Local Dev Experience**
-    *   **Demonstrate:** Go back to the Dev UI. Open a complex trace (like one from the refinement loop). Click through each step: the router, the advice drafts, the critiques, the tool calls, the final image generation. Emphasize how invaluable this is for debugging complex AI chains.
+*   **Slide 22: Deploying to Cloud Run (Live Demo).**
+    *   **Action:** Run the `gcloud run deploy` command.
+    *   Once deployed, show the service in the Google Cloud Console.
 
-*   **Slide 20: Exposing Flows as Services**
-    *   **Demonstrate:**
-        *   Point out that `npm start` also starts an Express server.
-        *   Open a new terminal and use `curl` to call the flow's endpoint directly:
-            ```bash
-            curl -X POST -H "Content-Type: application/json" -d '{"input": {"question": "Ciao Mamma!"}}' http://localhost:3400/getMammaAdvice
-            ```
-        *   Explain that because flows are just functions, you could build any custom API (Express, Fastify, etc.) and call your flow logic from within it.
-
-*   **Slide 21: Deploying to Cloud Run**
-    *   **Demonstrate:**
-        *   Show the `Dockerfile` in the project (if you choose to have one, or explain that `genkit deploy` can use a standard one).
-        *   Run the `gcloud auth configure-docker` command if needed.
-        *   Run `genkit deploy`. Explain what it's doing (building a container, pushing it to Artifact Registry, deploying to Cloud Run).
-        *   Show the deployed service in the Google Cloud Console.
-
-*   **Slide 22: Observability in Google Cloud**
+*   **Slide 23: Observability in Google Cloud.**
     *   **Demonstrate:**
         *   Call the deployed Cloud Run endpoint.
         *   Go to the Cloud Trace dashboard in the Google Cloud Console.
         *   Find and open the trace from the production call. Show that it's the *exact same* rich trace we had in the local Dev UI. This is the killer feature for production monitoring.
 
-*   **Slides 23 & 24: Recap & Q&A**
-    *   **Talking Points:** Briefly recap the journey: started with a simple flow, added structured I/O, composed prompts, added tools, built agentic patterns, and deployed to production with full observability. Open the floor for questions.
+*   **Slide 24: Recap & Thank You.**
+*   **Slide 25: Q&A.**

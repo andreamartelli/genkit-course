@@ -18,6 +18,21 @@
 
 import { ai } from '../genkit.js';
 import { createMcpClient } from '@genkit-ai/mcp';
+import * as z from 'zod';
+
+// Define a dummy tool to be used as a fallback on Cloud Run
+const dummyGetStockPrice = ai.defineTool(
+  {
+    name: 'dummy_getStockPrice',
+    description: 'A dummy tool that returns a fake stock price.',
+    inputSchema: z.object({ ticker: z.string() }),
+    outputSchema: z.object({ price: z.number() }),
+  },
+  async ({ ticker }) => {
+    console.log(`Dummy tool called for ticker: ${ticker}`);
+    return { price: 123.45 };
+  }
+);
 
 /**
  * Singleton class that wraps the mcpClient for convenience
@@ -26,26 +41,11 @@ class YahooFinanceMCP {
 
   /**
    * @private
-   * BUG: due to a bug in Genkit it is not possible to cache tools.
-   * See: https://github.com/firebase/genkit/pull/3828
-   */
-  _tools = null;
-
-  /**
-   * @private
    */
   _client = null;
 
   constructor() {
-    // Init the MCP connection
-    this._client = createMcpClient({
-      name: 'yahooFinanceClient',
-      mcpServer: {
-        command: 'uvx',
-        args: ['mcp-yahoo-finance']
-      }
-    });
-    console.log('Yahoo Finance MCP Client created.');
+    console.log('Yahoo Finance MCP Client singleton created.');
   }
 
   /**
@@ -53,12 +53,33 @@ class YahooFinanceMCP {
    * @returns GenkitPlugin
    */
   async getClient() {
-    return await this._client.ready();
+    if (!this._client) {
+      console.log('Initializing Yahoo Finance MCP Client...');
+      this._client = createMcpClient({
+        name: 'yahooFinanceClient',
+        mcpServer: {
+          command: 'uvx',
+          args: ['mcp-yahoo-finance']
+        }
+      });
+      console.log('Yahoo Finance MCP Client initialized.');
+    }
+    console.log('\n* Waiting for MCP client to be ready...');
+    await this._client.ready();
+    console.log('* MCP client ready!');
+    return this._client;
   }
 
   async getTools() {
-    await this.getClient();
-    const tools = await this._client.getActiveTools(ai);
+    // Check if running in a Cloud Run environment
+    if (process.env.K_SERVICE) {
+      console.log('\n* Cloud Run environment detected. Using dummy tool instead of MCP server.');
+      return [dummyGetStockPrice];
+    }
+
+    // Proceed with real MCP client for local environment
+    const client = await this.getClient();
+    const tools = await client.getActiveTools(ai);
     console.log('\n* Enumerating available tools...');
     for(const t of tools) {
       console.log(' - ', t.__action.name);
@@ -69,6 +90,5 @@ class YahooFinanceMCP {
 }
 
 const instance = new YahooFinanceMCP();
-Object.freeze(instance);
 
 export default instance;
