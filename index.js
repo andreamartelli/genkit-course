@@ -15,4 +15,4 @@
  */
 
 import './src/genkit.js';
-import './src/flows/mamma.js';
+import './src/server.js';

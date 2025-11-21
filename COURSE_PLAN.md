@@ -178,13 +178,15 @@ We will use tags in the format `mX-sY` to mark the state of the code at each ste
         *   `ai.chat()` is a specialized helper that automatically manages history and state, simplifying the creation of chatbots.
 
 ### **Module 6: Dalla Cucina al Cloud**
-*   **Slide 19: The Local Dev Experience: Traces are your best friend.**
-    *   **Action:** Deep dive into a complex trace, showing inputs, tool calls, and outputs.
 *   **Slide 20: Exposing Flows as Services: The Express Integration.**
-    *   **Action:** Highlight `startFlowServer()` in `index.js` and explain it creates REST endpoints. Show how to `curl` the endpoint.
-*   **Slide 21: Deploying to Cloud Run.**
-    *   **Action:** Show the `Dockerfile`, the `genkit deploy` command, and the Cloud Run service.
-*   **Slide 22: Observability in Google Cloud.**
-    *   **Action:** Show the trace from the deployed app in Google Cloud Trace.
+    *   **Tag: `m6-s12`**
+    *   **Code Sample 12:**
+        *   Create `src/server.js` to explicitly start the Express server using `startFlowServer` (or a manual Express setup).
+        *   Update `index.js` to run the server.
+    *   **Action:** Demonstrate calling the flow endpoint with the correct `curl` command: `curl -d '{"data": {"question": "..."}}' ...`
+*   **Slide 21: Deploying to Cloud Run (Live Demo).**
+    *   **Action:** Run `genkit deploy` and show the deployed service in the Google Cloud Console.
+*   **Slide 22: Observability in Google Cloud (Live Demo).**
+    *   **Action:** Call the production endpoint and show the corresponding trace appearing in the Google Cloud Trace dashboard.
 *   **Slide 23: Recap & Thank You.**
 *   **Slide 24: Q&A.
