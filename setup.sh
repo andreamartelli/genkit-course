@@ -65,12 +65,14 @@ if [[ "$OS" == "macos" ]] && ! command -v brew &> /dev/null; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     (echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> ~/.zprofile
     eval "$(/opt/homebrew/bin/brew shellenv)"
+    success "Homebrew installed."
 fi
 
 # Git
 if ! command -v git &> /dev/null; then
     info "Git not found. Installing Git..."
     $PKG_MANAGER git
+    success "Git installed."
 fi
 
 # Node.js
@@ -82,26 +84,39 @@ if ! command -v node &> /dev/null; then
         curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
         sudo apt-get install -y nodejs
     fi
+    success "Node.js installed."
 fi
 
 # Python
 if ! command -v python3 &> /dev/null; then
     info "Python 3 not found. Installing Python 3..."
-    $PKG_MANAGER python3 python3-pip
+    if [[ "$OS" == "macos" ]]; then
+        $PKG_MANAGER python3
+    else
+        $PKG_MANAGER python3 python3-pip
+    fi
+    success "Python 3 installed."
 fi
 
 # pipx
 if ! command -v pipx &> /dev/null; then
     info "pipx not found. Installing pipx..."
-    python3 -m pip install --user pipx
-    python3 -m pipx ensurepath
+    if [[ "$OS" == "macos" ]]; then
+        brew install pipx
+        pipx ensurepath
+    else
+        python3 -m pip install --user pipx
+        python3 -m pipx ensurepath
+    fi
     export PATH="$PATH:$HOME/.local/bin" # Add pipx to path for the current session
+    success "pipx installed."
 fi
 
 # uv
 if ! command -v uv &> /dev/null; then
     info "uv/uvx not found. Installing uv..."
     pipx install uv
+    success "uv/uvx installed."
 fi
 
 # Google Cloud SDK
@@ -113,7 +128,7 @@ if ! command -v gcloud &> /dev/null; then
     error "Google Cloud SDK installation initiated. Please open a NEW terminal and re-run this script."
 fi
 
-success "All prerequisites are installed and up to date."
+success "All prerequisites are installed."
 
 # --- The rest of the script is the same as before ---
 
@@ -126,7 +141,7 @@ if [ -z "$GCLOUD_PROJECT_ID" ]; then
 fi
 
 info "Checking if project '$GCLOUD_PROJECT_ID' exists..."
-if gcloud projects describe "$GCLOUD_PROJECT_ID" &> /dev/null; then
+if gcloud projects describe "$GCLOUD_PROJECT_ID" --quiet &> /dev/null; then
     success "Project '$GCLOUD_PROJECT_ID' already exists."
 else
     info "Project '$GCLOUD_PROJECT_ID' not found. Creating it now..."
@@ -136,7 +151,7 @@ else
     info "Waiting for project to be fully created... (This may take a minute or two)"
     TIMEOUT=300 # 5 minutes timeout
     SECONDS=0
-    while ! gcloud projects describe "$GCLOUD_PROJECT_ID" &> /dev/null; do
+    while ! gcloud projects describe "$GCLOUD_PROJECT_ID" --quiet &> /dev/null; do
         sleep 5
         SECONDS=$((SECONDS + 5))
         if [ $SECONDS -ge $TIMEOUT ]; then
@@ -150,6 +165,9 @@ fi
 
 info "Setting gcloud project to '$GCLOUD_PROJECT_ID'..."
 gcloud config set project "$GCLOUD_PROJECT_ID"
+
+info "Enabling the Cloud Resource Manager API (cloudresourcemanager.googleapis.com)..."
+gcloud services enable cloudresourcemanager.googleapis.com --project="$GCLOUD_PROJECT_ID"
 
 info "Enabling the Vertex AI API (aiplatform.googleapis.com)..."
 gcloud services enable aiplatform.googleapis.com --project="$GCLOUD_PROJECT_ID"
@@ -213,7 +231,7 @@ gcloud projects add-iam-policy-binding "$GCLOUD_PROJECT_ID" \
 success "IAM role granted to $CLOUD_BUILD_SERVICE_ACCOUNT."
 
 # --- Code Checkout ---
-REPO_URL="https://github.com/your-org/consigliai-di-mamma.git" # Placeholder URL
+REPO_URL="https://github.com/andreamartelli/genkit-course.git"
 REPO_DIR="consigliai-di-mamma"
 
 if [ -d "$REPO_DIR" ]; then
