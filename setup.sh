@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Exit immediately if a command exits with a non-zero status.
+set -e
+
 # This script is designed to be run on macOS or Debian/Red Hat-based Linux.
 # It will attempt to install missing prerequisites, which may require sudo privileges.
 
@@ -96,6 +99,17 @@ if ! command -v python3 &> /dev/null; then
         $PKG_MANAGER python3 python3-pip
     fi
     success "Python 3 installed."
+fi
+
+# Ensure pip is installed for Python 3, especially on minimal Linux distros
+if ! python3 -m pip --version &> /dev/null; then
+    info "pip for python3 not found. Installing python3-pip..."
+    if [[ "$OS" == "debian" ]]; then
+        sudo apt-get install -y python3-pip
+    elif [[ "$OS" == "redhat" ]]; then
+        sudo yum install -y python3-pip
+    fi
+    success "pip for python3 installed."
 fi
 
 # pipx
