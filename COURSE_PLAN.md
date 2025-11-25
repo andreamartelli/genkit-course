@@ -168,26 +168,25 @@ We will use tags in the format `mX-sY` to mark the state of the code at each ste
     *   **Code Sample 11:**
         *   Implement an environment-aware MCP client that uses the real `mcp-yahoo-finance` server locally, but provides a hardcoded dummy tool when running in Cloud Run.
 *   **Slide 19: Interactive Chats (Conceptual).**
-    *   **Tag: `m5-s12`**
     *   **Code Sample 12 (Conceptual/Slide-only):**
         *   This step is conceptual. The slide will explain how to build stateful, interactive chats easily using the `ai.chat()` method in Genkit.
 
 ### **Module 6: Dalla Cucina al Cloud**
 
 *   **Slide 20: The Local Dev Experience & Express Integration.**
-    *   **Tag: `m6-s13`**
-    *   **Code Sample 13:**
+    *   **Tag: `m6-s12`**
+    *   **Code Sample 12:**
         *   Create `src/server.js` to explicitly start the Express server.
         *   Update `index.js` to run the server.
 *   **Slide 21: Prepare for Cloud Run Deployment.**
-    *   **Tag: `m6-s14`**
-    *   **Code Sample 14:**
+    *   **Tag: `m6-s13`**
+    *   **Code Sample 13:**
         *   Modify `package.json` to use `node index.js` for the `start` script.
 *   **Slide 22: Deploying to Cloud Run (Live Demo).**
     *   **Action:** Run `gcloud run deploy`.
 *   **Slide 23: Production Observability with Firebase.**
-    *   **Tag: `m6-s15`**
-    *   **Code Sample 15:**
+    *   **Tag: `m6-s14`**
+    *   **Code Sample 14:**
         *   Add the `@genkit-ai/firebase` dependency to `package.json`.
         *   Add `enableFirebaseTelemetry()` to `src/genkit.js` to automatically configure production-grade tracing.
 *   **Slide 24: Recap & Thank You.**
