@@ -26,7 +26,7 @@ success() {
 
 # --- Initial Warning and Confirmation ---
 echo "This script will check for and install missing prerequisites for the Genkit course."
-echo "This may include: Homebrew (on macOS), Node.js, Python, Git, Google Cloud SDK, and Python tools."
+echo "This may include: Homebrew (on macOS), Node.js, Python, Git, and Google Cloud SDK."
 echo "Sudo privileges will be required for system-wide installations."
 read -p "Do you want to continue? (y/N) " -n 1 -r
 echo
@@ -90,47 +90,25 @@ if ! command -v node &> /dev/null; then
     success "Node.js installed."
 fi
 
-# Python
+# Python & pip
 if ! command -v python3 &> /dev/null; then
     info "Python 3 not found. Installing Python 3..."
     if [[ "$OS" == "macos" ]]; then
         $PKG_MANAGER python3
     else
-        $PKG_MANAGER python3 python3-pip
+        $PKG_MANAGER python3 python3-pip python3-venv
     fi
     success "Python 3 installed."
 fi
 
-# Ensure pip is installed for Python 3, especially on minimal Linux distros
 if ! python3 -m pip --version &> /dev/null; then
     info "pip for python3 not found. Installing python3-pip..."
     if [[ "$OS" == "debian" ]]; then
-        sudo apt-get install -y python3-pip
+        sudo apt-get install -y python3-pip python3-venv
     elif [[ "$OS" == "redhat" ]]; then
-        sudo yum install -y python3-pip
+        sudo yum install -y python3-pip python3-venv
     fi
     success "pip for python3 installed."
-fi
-
-# pipx
-if ! command -v pipx &> /dev/null; then
-    info "pipx not found. Installing pipx..."
-    if [[ "$OS" == "macos" ]]; then
-        brew install pipx
-    else
-        # On Linux, install pipx using the system package manager to avoid PEP 668 errors
-        $PKG_MANAGER pipx
-    fi
-    pipx ensurepath
-    export PATH="$PATH:$HOME/.local/bin" # Add pipx to path for the current session
-    success "pipx installed."
-fi
-
-# uv
-if ! command -v uv &> /dev/null; then
-    info "uv/uvx not found. Installing uv..."
-    pipx install uv
-    success "uv/uvx installed."
 fi
 
 # Google Cloud SDK
@@ -142,9 +120,7 @@ if ! command -v gcloud &> /dev/null; then
     error "Google Cloud SDK installation initiated. Please open a NEW terminal and re-run this script."
 fi
 
-success "All prerequisites are installed."
-
-# --- The rest of the script is the same as before ---
+success "All command-line prerequisites are installed."
 
 # --- Google Cloud Configuration ---
 info "Configuring Google Cloud..."
@@ -208,10 +184,9 @@ gcloud projects add-iam-policy-binding "$GCLOUD_PROJECT_ID" --member="serviceAcc
 
 success "All necessary IAM roles have been granted."
 
-
 # --- Code Checkout ---
 REPO_URL="https://github.com/andreamartelli/genkit-course.git"
-REPO_DIR="genkit-course" # Corrected directory name
+REPO_DIR="genkit-course"
 
 if [ -d "$REPO_DIR" ]; then
     info "Directory '$REPO_DIR' already exists. Skipping git clone."
@@ -223,12 +198,22 @@ fi
 cd "$REPO_DIR"
 info "Changed directory to '$REPO_DIR'."
 
-# Add the repository to Git's safe.directory list to prevent 'dubious ownership' errors
-# This is common in environments where the user might not be the original owner of the cloned directory.
+# Add the repository to Git's safe.directory list
 git config --global --add safe.directory "$(pwd)"
 success "Repository added to Git's safe directories."
 
-# --- Installation ---
+# --- Python Virtual Environment and Tool Installation ---
+info "Creating Python virtual environment in ./.venv ..."
+python3 -m venv .venv
+
+info "Activating virtual environment..."
+source .venv/bin/activate
+
+info "Installing 'uv' into the virtual environment..."
+python3 -m pip install uv
+success "'uv' is now installed in the virtual environment."
+
+# --- Node.js Installation ---
 info "Installing Node.js dependencies..."
 npm install
 success "Dependencies installed."
