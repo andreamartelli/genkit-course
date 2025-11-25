@@ -209,6 +209,11 @@ fi
 cd "$REPO_DIR"
 info "Changed directory to '$REPO_DIR'."
 
+# Add the repository to Git's safe.directory list to prevent 'dubious ownership' errors
+# This is common in environments where the user might not be the original owner of the cloned directory.
+git config --global --add safe.directory "$(pwd)"
+success "Repository added to Git's safe directories."
+
 # --- Installation ---
 info "Installing Node.js dependencies..."
 npm install
