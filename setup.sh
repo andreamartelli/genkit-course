@@ -141,9 +141,7 @@ if [ -z "$GCLOUD_PROJECT_ID" ]; then
 fi
 
 info "Checking if project '$GCLOUD_PROJECT_ID' exists..."
-if gcloud projects describe "$GCLOUD_PROJECT_ID" --quiet &> /dev/null; then
-    success "Project '$GCLOUD_PROJECT_ID' already exists."
-else
+if ! gcloud projects describe "$GCLOUD_PROJECT_ID" --quiet &> /dev/null; then
     info "Project '$GCLOUD_PROJECT_ID' not found. Creating it now..."
     gcloud projects create "$GCLOUD_PROJECT_ID"
     success "Project creation command issued."
@@ -166,73 +164,40 @@ fi
 info "Setting gcloud project to '$GCLOUD_PROJECT_ID'..."
 gcloud config set project "$GCLOUD_PROJECT_ID"
 
-info "Enabling the Cloud Resource Manager API (cloudresourcemanager.googleapis.com)..."
-gcloud services enable cloudresourcemanager.googleapis.com --project="$GCLOUD_PROJECT_ID"
+# --- Billing Check ---
+info "Checking if billing is enabled for project '$GCLOUD_PROJECT_ID'..."
+if ! gcloud beta billing projects describe "$GCLOUD_PROJECT_ID" --format="value(billingEnabled)" | grep -q "True"; then
+    error "Billing is not enabled for project '$GCLOUD_PROJECT_ID'. Please visit the Google Cloud Console to enable billing, then re-run this script."
+fi
+success "Billing is enabled."
 
-info "Enabling the Vertex AI API (aiplatform.googleapis.com)..."
-gcloud services enable aiplatform.googleapis.com --project="$GCLOUD_PROJECT_ID"
-
-info "Enabling the Compute Engine API (compute.googleapis.com) to ensure default service account exists..."
-gcloud services enable compute.googleapis.com --project="$GCLOUD_PROJECT_ID"
-
+# --- API and IAM Configuration ---
+info "Enabling required Google Cloud APIs..."
+gcloud services enable cloudresourcemanager.googleapis.com compute.googleapis.com aiplatform.googleapis.com artifactregistry.googleapis.com cloudbuild.googleapis.com --project="$GCLOUD_PROJECT_ID"
 success "Required APIs enabled."
 
-info "Granting 'Vertex AI User' role to the default Compute Engine service account..."
+info "Granting necessary IAM roles..."
 PROJECT_NUMBER=$(gcloud projects describe "$GCLOUD_PROJECT_ID" --format="value(projectNumber)")
+
+# Grant roles to Default Compute Service Account
 SERVICE_ACCOUNT="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
-gcloud projects add-iam-policy-binding "$GCLOUD_PROJECT_ID" \
-    --member="serviceAccount:${SERVICE_ACCOUNT}" \
-    --role="roles/aiplatform.user" \
-    --condition=None \
-    --quiet
-success "IAM role granted to $SERVICE_ACCOUNT."
+info "Granting roles to Default Compute Service Account ($SERVICE_ACCOUNT)..."
+gcloud projects add-iam-policy-binding "$GCLOUD_PROJECT_ID" --member="serviceAccount:${SERVICE_ACCOUNT}" --role="roles/aiplatform.user" --condition=None --quiet
+gcloud projects add-iam-policy-binding "$GCLOUD_PROJECT_ID" --member="serviceAccount:${SERVICE_ACCOUNT}" --role="roles/storage.objectViewer" --condition=None --quiet
+gcloud projects add-iam-policy-binding "$GCLOUD_PROJECT_ID" --member="serviceAccount:${SERVICE_ACCOUNT}" --role="roles/logging.logWriter" --condition=None --quiet
 
-info "Granting 'Storage Object Viewer' role to the default Compute Engine service account..."
-gcloud projects add-iam-policy-binding "$GCLOUD_PROJECT_ID" \
-    --member="serviceAccount:${SERVICE_ACCOUNT}" \
-    --role="roles/storage.objectViewer" \
-    --condition=None \
-    --quiet
-success "IAM role granted to $SERVICE_ACCOUNT."
-
-info "Granting Observability roles (Metric Writer, Trace Agent, Log Writer) to the default Compute Engine service account..."
-gcloud projects add-iam-policy-binding "$GCLOUD_PROJECT_ID" \
-    --member="serviceAccount:${SERVICE_ACCOUNT}" \
-    --role="roles/monitoring.metricWriter" \
-    --condition=None \
-    --quiet
-gcloud projects add-iam-policy-binding "$GCLOUD_PROJECT_ID" \
-    --member="serviceAccount:${SERVICE_ACCOUNT}" \
-    --role="roles/cloudtrace.agent" \
-    --condition=None \
-    --quiet
-gcloud projects add-iam-policy-binding "$GCLOUD_PROJECT_ID" \
-    --member="serviceAccount:${SERVICE_ACCOUNT}" \
-    --role="roles/logging.logWriter" \
-    --condition=None \
-    --quiet
-success "Observability IAM roles granted to $SERVICE_ACCOUNT."
-
-info "Granting 'Artifact Registry Reader' role to the Cloud Build service account..."
+# Grant roles to Cloud Build Service Account
 CLOUD_BUILD_SERVICE_ACCOUNT="${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com"
-gcloud projects add-iam-policy-binding "$GCLOUD_PROJECT_ID" \
-    --member="serviceAccount:${CLOUD_BUILD_SERVICE_ACCOUNT}" \
-    --role="roles/artifactregistry.reader" \
-    --condition=None \
-    --quiet
-success "IAM role granted to $CLOUD_BUILD_SERVICE_ACCOUNT."
+info "Granting roles to Cloud Build Service Account ($CLOUD_BUILD_SERVICE_ACCOUNT)..."
+gcloud projects add-iam-policy-binding "$GCLOUD_PROJECT_ID" --member="serviceAccount:${CLOUD_BUILD_SERVICE_ACCOUNT}" --role="roles/artifactregistry.reader" --condition=None --quiet
+gcloud projects add-iam-policy-binding "$GCLOUD_PROJECT_ID" --member="serviceAccount:${CLOUD_BUILD_SERVICE_ACCOUNT}" --role="roles/artifactregistry.writer" --condition=None --quiet
 
-info "Granting 'Artifact Registry Writer' role to the Cloud Build service account..."
-gcloud projects add-iam-policy-binding "$GCLOUD_PROJECT_ID" \
-    --member="serviceAccount:${CLOUD_BUILD_SERVICE_ACCOUNT}" \
-    --role="roles/artifactregistry.writer" \
-    --condition=None \
-    --quiet
-success "IAM role granted to $CLOUD_BUILD_SERVICE_ACCOUNT."
+success "All necessary IAM roles have been granted."
+
 
 # --- Code Checkout ---
 REPO_URL="https://github.com/andreamartelli/genkit-course.git"
-REPO_DIR="consigliai-di-mamma"
+REPO_DIR="genkit-course" # Corrected directory name
 
 if [ -d "$REPO_DIR" ]; then
     info "Directory '$REPO_DIR' already exists. Skipping git clone."
