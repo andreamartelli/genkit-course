@@ -117,11 +117,11 @@ if ! command -v pipx &> /dev/null; then
     info "pipx not found. Installing pipx..."
     if [[ "$OS" == "macos" ]]; then
         brew install pipx
-        pipx ensurepath
     else
-        python3 -m pip install --user pipx
-        python3 -m pipx ensurepath
+        # On Linux, install pipx using the system package manager to avoid PEP 668 errors
+        $PKG_MANAGER pipx
     fi
+    pipx ensurepath
     export PATH="$PATH:$HOME/.local/bin" # Add pipx to path for the current session
     success "pipx installed."
 fi
