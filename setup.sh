@@ -95,6 +95,7 @@ cd genkit-course
 
 info "Installing Node.js dependencies..."
 npm install
+cd genkit-course
 
 # --- Final Instructions ---
 success "Setup complete!"
