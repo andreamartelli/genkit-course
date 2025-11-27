@@ -105,47 +105,47 @@ We will use tags in the format `mX-sY` to mark the state of the code at each ste
 
 ### **Module 2: Il Primo Consiglio di Mamma**
 *   **Slide 8: Setup & "Hello, Mamma!"** - Your first Genkit flow.
-    *   **Tag: `m2-s1`**
+    *   **Tag: `step/m2-s1`**
     *   **Code Sample 1:**
         *   `package.json`: Dependencies (`genkit`, `@genkit-ai/vertexai`, `express`, `zod`).
         *   `index.js`: Initialize Genkit with Vertex AI (`configureGenkit`). Define a basic flow `mammaSaysHello`.
 
 ### **Module 3: Mamma Vuole Chiarezza**
 *   **Slide 9: The Power of Prompts: Giving Mamma a Personality & Making it Reusable.**
-    *   **Tag: `m3-s2`**
+    *   **Tag: `step/m3-s2`**
     *   **Code Sample 2:**
         *   Create `prompts/mammaAdvice.prompt` with a `name`, persona, and Handlebars templating (`{{question}}`).
         *   Modify the flow to call the prompt by its name (`ai.prompt('mammaAdvice', ...)`).
 *   **Slide 10: Structured I/O (Method 1: Flow-level & Referenced Schemas).**
-    *   **Tag: `m3-s3`**
+    *   **Tag: `step/m3-s3`**
     *   **Code Sample 3:**
         *   Add a Zod schema to the flow's `outputSchema`.
         *   Refactor immediately by creating `src/schemas.js` and moving the schema definition there.
         *   Update the flow to import and use the schema from `src/schemas.js`.
 *   **Slide 11: Prompt Composition with Partials.**
-    *   **Tag: `m3-s4`**
+    *   **Tag: `step/m3-s4`**
     *   **Code Sample 4:**
         *   Create `prompts/mammaPersona.prompt` to hold the core persona.
         *   Update `prompts/mammaAdvice.prompt` to include the persona using `{{> mammaPersona}}`.
 *   **Slide 12: Structured I/O (Method 2: Inline Prompt Schemas).**
-    *   **Tag: `m3-s5`**
+    *   **Tag: `step/m3-s5`**
     *   **Code Sample 5:**
         *   Modify `prompts/mammaAdvice.prompt`: Add an `output` block with an inline Zod schema.
         *   Remove the `outputSchema` from the flow definition in `src/flows/mamma.js`.
 *   **Slide 13: Structured I/O (Method 3: Referenced Prompt Schemas).**
-    *   **Tag: `m3-s6`**
+    *   **Tag: `step/m3-s6`**
     *   **Code Sample 6:**
         *   Modify `src/genkit.js`: Register the schema from `src/schemas.js` with `defineSchema('mammaAdvice', ...)`.
         *   Modify `prompts/mammaAdvice.prompt`: Reference the schema by its registered name: `schema: mammaAdvice`.
 
 ### **Module 4: Mamma si Informa**
 *   **Slide 14: Giving Mamma Tools (Part 1): Custom Exchange Rate Tool.**
-    *   **Tag: `m4-s7`**
+    *   **Tag: `step/m4-s7`**
     *   **Code Sample 7:**
         *   Create a custom tool `getExchangeRate` that calls a public API to fetch currency exchange rates.
         *   Add the tool to the `prompt` call.
 *   **Slide 15: More Tools - Grounding and Agentic Patterns.**
-    *   **Tag: `m4-s8`**
+    *   **Tag: `step/m4-s8`**
     *   **Code Sample 8:**
         *   Implement a router prompt to classify user intent.
         *   Refactor the main flow to first call the router.
@@ -153,40 +153,41 @@ We will use tags in the format `mX-sY` to mark the state of the code at each ste
 
 ### **Module 5: La Saggezza Avanzata di Mamma**
 *   **Slide 16: Multimodality: Mamma's "Financial Care Package".**
-    *   **Tag: `m5-s9`**
+    *   **Tag: `step/m5-s9`**
     *   **Code Sample 9:**
         *   Update `MammaAdviceSchema` to include an optional `imageUrl` field.
         *   In the flow, after Mamma gives text advice, make a second `ai.generate` call using a multimodal model to generate an image based on the advice.
         *   Include the generated image URL in the flow's output.
 *   **Slide 17: Agentic Patterns: Iterative Refinement.**
-    *   **Tag: `m5-s10`**
+    *   **Tag: `step/m5-s10`**
     *   **Code Sample 10:**
         *   Create a `critique.prompt` to evaluate the quality of Mamma's advice.
         *   Implement a refinement loop in the main flow that calls the advice prompt, then the critique prompt, and feeds the critique back into the advice prompt to improve the response.
-*   **Slide 21: Deploying to Cloud Run (Live Demo).**
-    *   **Action:** Run `gcloud run deploy`.
-    *   **Explain the Faked MCP:** While deploying, explain that our `yahooFinanceMcp.js` code detects the Cloud Run environment (via `process.env.K_SERVICE`) and provides a dummy tool instead of starting the real `uvx` server. This is a crucial pattern for production deployments to ensure container startup is fast and reliable.
-*   **Slide 19: Interactive Chats.**
-    *   **Tag: `m5-s12`**
+*   **Slide 18: Advanced Tooling with MCP.**
+    *   **Tag: `step/m5-s11`**
+    *   **Code Sample 11:**
+        *   Implement an environment-aware MCP client that uses the real `mcp-yahoo-finance` server locally, but provides a hardcoded dummy tool when running in Cloud Run.
+*   **Slide 19: Interactive Chats (Conceptual).**
     *   **Code Sample 12 (Conceptual/Slide-only):**
         *   This step is conceptual. The slide will explain how to build stateful, interactive chats easily using the `ai.chat()` method in Genkit.
-        *   `ai.chat()` is a specialized helper that automatically manages history and state, simplifying the creation of chatbots.
 
 ### **Module 6: Dalla Cucina al Cloud**
+
 *   **Slide 20: The Local Dev Experience & Express Integration.**
-    *   **Tag: `m6-s12`**
+    *   **Tag: `step/m6-s12`**
     *   **Code Sample 12:**
-        *   Create `src/server.js` to explicitly start the Express server using `startFlowServer` (or a manual Express setup).
+        *   Create `src/server.js` to explicitly start the Express server.
         *   Update `index.js` to run the server.
 *   **Slide 21: Prepare for Cloud Run Deployment.**
-    *   **Tag: `m6-s13`**
+    *   **Tag: `step/m6-s13`**
     *   **Code Sample 13:**
-        *   Modify `src/tools/yahooFinanceMcp.js` to implement lazy initialization and environment detection (faking MCP on Cloud Run).
-        *   Modify `package.json` to use `node index.js` for the `start` script (production-ready).
+        *   Modify `package.json` to use `node index.js` for the `start` script.
 *   **Slide 22: Deploying to Cloud Run (Live Demo).**
-    *   **Tag: `m6-s14`**
     *   **Action:** Run `gcloud run deploy`.
-*   **Slide 23: Observability in Google Cloud (Live Demo).**
-    *   **Action:** Call the production endpoint and show the corresponding trace appearing in the Google Cloud Trace dashboard.
+*   **Slide 23: Production Observability with Firebase.**
+    *   **Tag: `step/m6-s14`**
+    *   **Code Sample 14:**
+        *   Add the `@genkit-ai/firebase` dependency to `package.json`.
+        *   Add `enableFirebaseTelemetry()` to `src/genkit.js` to automatically configure production-grade tracing.
 *   **Slide 24: Recap & Thank You.**
 *   **Slide 25: Q&A.
